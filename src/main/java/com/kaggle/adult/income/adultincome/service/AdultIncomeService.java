@@ -3,7 +3,9 @@ package com.kaggle.adult.income.adultincome.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.kaggle.adult.income.adultincome.model.AdultIncome;
@@ -31,14 +33,22 @@ public class AdultIncomeService {
     }
 
     public AdultIncome updateAdultIncome(AdultIncome adultIncome) {
-        return adultIncomeRepository.save(adultIncome);
+    	AdultIncome existingIncome = adultIncomeRepository.findById(adultIncome.getId()).orElse(null);
+        if (existingIncome != null) {
+            existingIncome.setAge(adultIncome.getAge());
+            existingIncome.setWorkclass(adultIncome.getWorkclass());
+            // Set other fields as needed
+            return adultIncomeRepository.save(existingIncome);
+        }
+        return null;
     }
 
     public void deleteAdultIncomeById(String id) {
         adultIncomeRepository.deleteById(id);
     }
 
-    public List<AdultIncome> getAdultIncomesWithPagination(int page, int size) {
-        return adultIncomeRepository.findAll(PageRequest.of(page, size)).getContent();
-    }
+	public Page<AdultIncome> getAdultIncomesWithPagination(Pageable pageable) {
+		
+		return adultIncomeRepository.findAll(pageable);
+	}
 }
