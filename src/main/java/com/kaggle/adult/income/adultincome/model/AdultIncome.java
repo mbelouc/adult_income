@@ -5,9 +5,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
-@Document(collection = "adult_income")
+@Document(collection = "some")
 @Data
+@Getter
+@Setter
 public class AdultIncome {
     @Id
     private String id;
